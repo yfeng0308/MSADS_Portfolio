@@ -1,0 +1,227 @@
+CREATE TABLE ClassRoom(
+ClassRoomID VARCHAR(50) NOT NULL PRIMARY KEY,
+Capacity VARCHAR(20) NOT NULL,
+ClassRoomNumber VARCHAR(20) NOT NULL,
+ClassBuilding VARCHAR(80) NOT NULL,
+);
+
+CREATE TABLE TechTool(
+TTID INTEGER NOT NULL PRIMARY KEY,
+TTName VARCHAR(20) NOT NULL,
+TTDescribe VARCHAR(50) NOT NULL,
+);
+
+CREATE TABLE Instructor(
+InstID VARCHAR(40) NOT NULL PRIMARY KEY,
+InstFName VARCHAR(40) NOT NULL,
+InstLName VARCHAR(40) NOT NULL,
+InstEmail VARCHAR(50) NOT NULL UNIQUE,
+InstGender VARCHAR(20) NOT NULL,
+InstTitle VARCHAR(40) NOT NULL,
+CONSTRAINT chk_InstGendr CHECK (InstGender = 'Male' OR InstGender = 'Female'),
+);
+
+CREATE TABLE Student(
+SUID VARCHAR(20) NOT NULL PRIMARY KEY,
+StudFName VARCHAR(20) NOT NULL,
+StudLName VARCHAR(20) NOT NULL,
+StudEmail VARCHAR(50) NOT NULL UNIQUE,
+StudGender VARCHAR(20) NOT NULL,
+StudPhoneNum VARCHAR(20) NOT NULL UNIQUE,
+StudMajor VARCHAR(20) NOT NULL,
+StudLevel VARCHAR(20) NOT NULL,
+TargetJob VARCHAR(20),
+CONSTRAINT chk_StudLevel CHECK (StudLevel = 'Undergraduate' OR StudLevel = 'Graduate'),
+);
+
+CREATE TABLE Course(
+CourseID VARCHAR(20) NOT NULL PRIMARY KEY,
+SubjectCode VARCHAR(20) NOT NULL,
+TTID INTEGER  FOREIGN KEY REFERENCES TechTool(TTID),
+CourseName VARCHAR(50) NOT NULL,
+PreRequestCourse1 VARCHAR(20),
+PreRequestCourse2 VARCHAR(20),
+);
+
+CREATE TABLE Class(
+ClassID VARCHAR(20) NOT NULL PRIMARY KEY,
+ClassRoomID VARCHAR(50) NOT NULL FOREIGN KEY REFERENCES ClassRoom(ClassRoomID),
+InstID VARCHAR(40) NOT NULL FOREIGN KEY REFERENCES Instructor(InstID),
+Credits VARCHAR(10) NOT NULL,
+Semester VARCHAR(20) NOT NULL,
+StartDate DATETIME NOT NULL,
+EndDate DATETIME NOT NULL,
+Duration VARCHAR(20) NOT NULL,
+ClassSize VARCHAR(20) NOT NULL,
+WkSch VARCHAR(20) NOT NULL, 
+CourseID VARCHAR(20) NOT NULL FOREIGN KEY REFERENCES Course(CourseID),
+CONSTRAINT chk_WkSch CHECK (WkSch='M' OR WkSch='T' OR WkSch='W' OR WkSch='TH' OR WkSch='F' OR WkSch ='SA' OR WkSch='S'),
+Enrollment INTEGER,
+);
+
+CREATE TABLE Registration(
+RegstID VARCHAR(20) NOT NULL PRIMARY KEY,
+RegstDate DATETIME NOT NULL,
+SUID VARCHAR(20) FOREIGN KEY REFERENCES Student(SUID),
+ClassID VARCHAR(20) FOREIGN KEY REFERENCES Class(ClassID),
+);
+
+CREATE TABLE Company(
+CompanyId INTEGER NOT NULL PRIMARY KEY,
+CompState VARCHAR(20) NOT NULL,
+CompCity VARCHAR(20) NOT NULL,
+CompField TEXT,
+CompValue TEXT,
+CompName VARCHAR(20) NOT NULL,
+);
+
+CREATE TABLE Job(
+JobID INTEGER NOT NULL PRIMARY KEY,
+TTID INTEGER NOT NULL FOREIGN KEY REFERENCES TechTool(TTID),
+JobType VARCHAR(50) NOT NULL,
+JobRequest TEXT NOT NULL,
+);
+
+CREATE TABLE JobOffered(
+CompID INTEGER NOT NULL REFERENCES Company(CompanyID),
+JobID INTEGER NOT NULL REFERENCES Job(JobID),
+PostDate DATETIME NOT NULL,
+ApplicationDue DATETIME,
+PRIMARY KEY(CompID,JobID)
+);
+
+
+---Insert data - ClassRoom table---
+INSERT INTO ClassRoom (ClassRoomID,Capacity,ClassRoomNumber,ClassBuilding)
+VALUES('H002','40','2','Hinds Hall')
+INSERT INTO ClassRoom (ClassRoomID,Capacity,ClassRoomNumber,ClassBuilding)
+VALUES('H008','40','8','Hinds Hall')
+INSERT INTO ClassRoom (ClassRoomID,Capacity,ClassRoomNumber,ClassBuilding)
+VALUES('H010','40','10','Hinds Hall')
+INSERT INTO ClassRoom (ClassRoomID,Capacity,ClassRoomNumber,ClassBuilding)
+VALUES('H033','40','33','Hinds Hall')
+INSERT INTO ClassRoom (ClassRoomID,Capacity,ClassRoomNumber,ClassBuilding)
+VALUES('H113','40','113','Hinds Hall')
+INSERT INTO ClassRoom (ClassRoomID,Capacity,ClassRoomNumber,ClassBuilding)
+VALUES('H117','40','117','Hinds Hall')
+INSERT INTO ClassRoom (ClassRoomID,Capacity,ClassRoomNumber,ClassBuilding)
+VALUES('W007','120','7','School of Management');
+
+---Insert data - TechTool table---
+INSERT INTO TechTool(TTID,TTName,TTDescribe)
+VALUES(1,'Excel','Spreadsheet developed by Microsoft')
+INSERT INTO TechTool(TTID,TTName,TTDescribe)
+VALUES(2,'Visio','Software for drawing a variety of diagrams')
+INSERT INTO TechTool(TTID,TTName,TTDescribe)
+VALUES(3,'SQL Server','Relational Database Management System')
+INSERT INTO TechTool(TTID,TTName,TTDescribe)
+VALUES(4,'R Studio','Integrated Development Environment (IDE) for R');
+
+---Insert data - Instructor table---
+INSERT INTO Instructor(InstID,InstFName,InstLName,InstEmail,InstGender,InstTitle)
+VALUES('1','Hernando','Hoyos','hhoyos@syr.edu','Male','Professor')
+INSERT INTO Instructor(InstID,InstFName,InstLName,InstEmail,InstGender,InstTitle)
+VALUES('2','Jilian','Lando','jlando@syr.edu','Female','Professor')
+INSERT INTO Instructor(InstID,InstFName,InstLName,InstEmail,InstGender,InstTitle)
+VALUES('3','Anna','Chernobai','achernobai@syr.edu','Female','Professor')
+INSERT INTO Instructor(InstID,InstFName,InstLName,InstEmail,InstGender,InstTitle)
+VALUES('4','Jeff','Cases','jcases@syr.edu','Male','Assistant Professor')
+INSERT INTO Instructor(InstID,InstFName,InstLName,InstEmail,InstGender,InstTitle)
+VALUES('5','Angela','Wood','awood@syr.edu','Female','Instructor')
+INSERT INTO Instructor(InstID,InstFName,InstLName,InstEmail,InstGender,InstTitle)
+VALUES('6','Jake','Cox','jcox@syr.edu','Male','Assistant Professor');
+
+---Insert data - Student table---
+INSERT INTO Student(SUID,StudFName,StudLName,StudEmail, StudGender,StudPhoneNum,StudMajor,StudLevel,TargetJob)
+VALUES('S01','James','Smith','jsmith@syr.edu','Male','315-772-1221','IM','Undergraduate','Data')
+INSERT INTO Student(SUID,StudFName,StudLName,StudEmail, StudGender,StudPhoneNum,StudMajor,StudLevel,TargetJob)
+VALUES('S02','John','Williams','jwilliams@syr.edu','Male','253-432-1290','IM','Graduate','Data')
+INSERT INTO Student(SUID,StudFName,StudLName,StudEmail, StudGender,StudPhoneNum,StudMajor,StudLevel,TargetJob)
+VALUES('S03','Robert','Johnson','rjohnson@syr.edu','Male','431-333-7129','ADS','Graduate','Consulting')
+INSERT INTO Student(SUID,StudFName,StudLName,StudEmail, StudGender,StudPhoneNum,StudMajor,StudLevel,TargetJob)
+VALUES('S04','Mary','Davis','mdavis@syr.edu','Female','576-101-1119','EDS','Graduate','Consulting')
+INSERT INTO Student(SUID,StudFName,StudLName,StudEmail, StudGender,StudPhoneNum,StudMajor,StudLevel,TargetJob)
+VALUES('S05','Jennifer','Cuomo','jcuomo@syr.edu','Female','482-201-2973','LIS','Graduate',NULL);
+
+---Insert data - Course table---
+INSERT INTO Course(CourseID,SubjectCode,TTID,CourseName,PreRequestCourse1,PreRequestCourse2)
+VALUES('IST618','IST',NULL,'Information Policy',NULL,NULL)
+INSERT INTO Course(CourseID,SubjectCode,TTID,CourseName,PreRequestCourse1,PreRequestCourse2)
+VALUES('IST659','IST','3','Database Management',NULL,NULL)
+INSERT INTO Course(CourseID,SubjectCode,TTID,CourseName,PreRequestCourse1,PreRequestCourse2)
+VALUES('IST687','IST','4','Data Science',NULL,NULL)
+INSERT INTO Course(CourseID,SubjectCode,TTID,CourseName,PreRequestCourse1,PreRequestCourse2)
+VALUES('IST707','IST','4','Data Analytics','IST687',NULL)
+INSERT INTO Course(CourseID,SubjectCode,TTID,CourseName,PreRequestCourse1,PreRequestCourse2)
+VALUES('IST722','IST','3','Data Warehouse','IST659',NULL)
+INSERT INTO Course(CourseID,SubjectCode,TTID,CourseName,PreRequestCourse1,PreRequestCourse2)
+VALUES('MBC638','MBC','1','Data Analysis and Decision Making',NULL,NULL);
+
+---Insert data - Class table---
+INSERT INTO Class(ClassID,ClassRoomID,CourseID,InstID,Credits,Semester,StartDate,EndDate,Duration,ClassSize,WKSch,Enrollment)
+VALUES('618-M001','H002','IST618','5','3','Summer2019','2019-5-1 00:00:00.000', '2019-6-18 00:00:00.000','15:00-18:00','27','F',1) 
+INSERT INTO Class(ClassID,ClassRoomID,CourseID,InstID,Credits,Semester,StartDate,EndDate,Duration,ClassSize,WKSch,Enrollment)
+VALUES('638-M001','W007','MBC638','3','3','Spring2019',2019-1-21, 2019-5-4,'17:00-18:20','80','TH',1)
+INSERT INTO Class(ClassID,ClassRoomID,CourseID,InstID,Credits,Semester,StartDate,EndDate,Duration,ClassSize,WKSch,Enrollment)
+VALUES('659-M001','H117','IST659','2','3','Fall2019',2019-8-26, 2019-12-12,'9:30-12:30','28','W',0)
+INSERT INTO Class(ClassID,ClassRoomID,CourseID,InstID,Credits,Semester,StartDate,EndDate,Duration,ClassSize,WKSch,Enrollment)
+VALUES('659-M002','H113','IST659','1','3','Fall2019',2019-8-26, 2019-12-12,'11:00-14:00','28','T',1)
+INSERT INTO Class(ClassID,ClassRoomID,CourseID,InstID,Credits,Semester,StartDate,EndDate,Duration,ClassSize,WKSch,Enrollment)
+VALUES('687-M001','H008','IST687','1','3','Fall2018',2019-8-31, 2019-12-5,'14:00-15:30','25','TH',0)
+INSERT INTO Class(ClassID,ClassRoomID,CourseID,InstID,Credits,Semester,StartDate,EndDate,Duration,ClassSize,WKSch,Enrollment)
+VALUES('707-M001','H010','IST707','4','3','Spring2020',2019-1-13, 2019-4-30,'8:00-11:00','35','TH',1)
+INSERT INTO Class(ClassID,ClassRoomID,CourseID,InstID,Credits,Semester,StartDate,EndDate,Duration,ClassSize,WKSch,Enrollment)
+VALUES('722-M001','H033','IST722','6','3','Full2019',2019-8-26, 2019-12-12,'13:00-14:00','31','M',1);
+
+---Insert data - Registration table---
+INSERT INTO Registration(RegstID,RegstDate,SUID,ClassID)
+VALUES('R01','8/22/2018','S01','659-M002')
+INSERT INTO Registration(RegstID,RegstDate,SUID,ClassID)
+VALUES('R02','1/7/2019','S03','638-M001')
+INSERT INTO Registration(RegstID,RegstDate,SUID,ClassID)
+VALUES('R03','5/2/2019','S02','618-M001')
+INSERT INTO Registration(RegstID,RegstDate,SUID,ClassID)
+VALUES('R04','1/11/2020','S05','707-M001')
+INSERT INTO Registration(RegstID,RegstDate,SUID,ClassID)
+VALUES('R05','8/26/2019','S04','722-M001');
+
+---Insert data - Company table---
+INSERT INTO Company(CompanyId, CompName,CompState,CompCity,CompField,CompValue)
+VALUES(1,'Amazon','Washington','Seattle','Computer Service','Creative')
+INSERT INTO Company(CompanyId, CompName,CompState,CompCity,CompField,CompValue)
+VALUES(2,'PwC','New York','New York City','Consulting and Tax Service','Customer Experience')
+INSERT INTO Company(CompanyId, CompName,CompState,CompCity,CompField,CompValue)
+VALUES(3,'Facebook','California','San Francisco','Online Social Media Service', NULL);
+
+---Insert data - Job table---
+INSERT INTO Job(JobID,TTID,JobType,JobRequest)
+VALUES(1,1,'Consulting','Internship')
+INSERT INTO Job(JobID,TTID,JobType,JobRequest)
+VALUES(2,3,'Database','Full-time')
+INSERT INTO Job(JobID,TTID,JobType,JobRequest)
+VALUES(3,2,'Data Analysis','Part-time')
+INSERT INTO Job(JobID,TTID,JobType,JobRequest)
+VALUES(4,4,'Programming','Full-time')
+INSERT INTO Job(JobID,TTID,JobType,JobRequest)
+VALUES(5,4,'Data Analysis','Internship');
+
+---Insert data - JobOffered table---
+INSERT INTO JobOffered(CompID,JobID,PostDate,ApplicationDue)
+VALUES(1,1,'2020-5-1','2020-8-1')
+INSERT INTO JobOffered(CompID,JobID,PostDate,ApplicationDue)
+VALUES(1,2,'2020-5-1','2020-8-1')
+INSERT INTO JobOffered(CompID,JobID,PostDate,ApplicationDue)
+VALUES(1,3,'2020-5-1','2020-8-1')
+INSERT INTO JobOffered(CompID,JobID,PostDate,ApplicationDue)
+VALUES(2,1,'2020-5-1','2020-8-1')
+INSERT INTO JobOffered(CompID,JobID,PostDate,ApplicationDue)
+VALUES(2,2,'2020-5-1','2020-8-1')
+INSERT INTO JobOffered(CompID,JobID,PostDate,ApplicationDue)
+VALUES(3,1,'2020-5-1','2020-8-1')
+INSERT INTO JobOffered(CompID,JobID,PostDate,ApplicationDue)
+VALUES(3,2,'2020-5-1','2020-8-1')
+INSERT INTO JobOffered(CompID,JobID,PostDate,ApplicationDue)
+VALUES(3,3,'2020-5-1','2020-8-1')
+INSERT INTO JobOffered(CompID,JobID,PostDate,ApplicationDue)
+VALUES(3,4,'2020-5-1','2020-8-1');
+
