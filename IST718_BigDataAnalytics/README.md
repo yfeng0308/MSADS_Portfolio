@@ -1,7 +1,7 @@
 # IST 718 Big Data Analytics
 ## Yibo Feng
 
-SUID:575333926
+575333926
 
 yfeng44@syr.edu
 

@@ -1,7 +1,7 @@
 # IST 659 Database Administration
 ## Yibo Feng
 
-SUID:575333926
+575333926
 
 yfeng44@syr.edu
 
